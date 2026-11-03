@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Build and lint the pinned Lean package
+      - name: Build, lint, and audit the pinned Lean package
         uses: leanprover/lean-action@v1.6.2
         with:
           auto-config: false
@@ -35,6 +35,12 @@ jobs:
           lint: true
           use-mathlib-cache: true
           use-github-cache: true
+          axiom-audit: true
+          axiom-audit-allow: "propext,Classical.choice,Quot.sound"
+          axiom-audit-root: "IntegerDivision"
+
+      - name: Check that the library imports every source module
+        run: lake exe mk_all --check --lib IntegerDivision
 
       - name: Build an external consumer
         shell: bash
