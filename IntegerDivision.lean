@@ -1,1 +1,3 @@
-import IntegerDivision.Paper
+module
+
+public import IntegerDivision.Paper

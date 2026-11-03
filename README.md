@@ -5,9 +5,12 @@ Properties of Integer Division*. It formalizes Euclidean, truncating, floor,
 and ceiling quotient--remainder profiles over mathematical integers.
 
 The package exposes one profile-parameterized statement for Table 1 and for
-each numbered theorem. Import the complete paper-facing library with:
+each numbered theorem. To use the complete paper-facing library, start a Lean
+source file with:
 
 ```lean
+module
+
 import IntegerDivision
 ```
 

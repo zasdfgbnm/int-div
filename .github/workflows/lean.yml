@@ -58,6 +58,8 @@ jobs:
           EOF
 
           cat > "$consumer/Consumer.lean" <<'EOF'
+          module
+
           import IntegerDivision
 
           #check @IntegerDivision.Profile

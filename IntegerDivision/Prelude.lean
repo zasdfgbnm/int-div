@@ -1,12 +1,16 @@
-import Aesop
-import Lean.Elab.Tactic.Omega
-import Mathlib.Data.Int.DivMod
-import Mathlib.Data.Int.GCD
-import Mathlib.Data.Int.Lemmas
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+
+public import Aesop
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Data.Int.DivMod
+public import Mathlib.Data.Int.GCD
+public import Mathlib.Data.Int.Lemmas
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 set_option autoImplicit false
 

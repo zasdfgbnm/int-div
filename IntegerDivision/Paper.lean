@@ -1,4 +1,8 @@
-import IntegerDivision.Specification
+module
+
+public import IntegerDivision.Specification
+
+@[expose] public section
 
 set_option autoImplicit false
 

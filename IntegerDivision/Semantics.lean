@@ -1,5 +1,9 @@
-import IntegerDivision.Prelude
-import Mathlib.Data.Rat.Floor
+module
+
+public import IntegerDivision.Prelude
+public import Mathlib.Data.Rat.Floor
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -65,7 +69,7 @@ private theorem truncate_exact_quotient (a d : Int) (hd : d ≠ 0) :
 := by
   unfold truncate
   by_cases hq : 0 ≤ (a : ℚ) / (d : ℚ)
-  · rw [if_pos hq, floor_exact_quotient a d hd]
+  · rw [ite_eq_left hq, floor_exact_quotient a d hd]
     rcases lt_or_gt_of_ne hd with hneg | hpos
     · have ha : a ≤ 0 := by
         have hdq : (d : ℚ) < 0 := by exact_mod_cast hneg
@@ -86,7 +90,7 @@ private theorem truncate_exact_quotient (a d : Int) (hd : d ≠ 0) :
         · exact_mod_cast h.1
         · exact False.elim ((not_lt_of_ge h.2) hdq)
       exact (tdiv_eq_fdiv_of_nonnegative_of_positive a d ha hpos).symm
-  · rw [if_neg hq, ceil_exact_quotient a d hd]
+  · rw [ite_eq_right hq, ceil_exact_quotient a d hd]
     have hqneg : (a : ℚ) / (d : ℚ) < 0 := lt_of_not_ge hq
     rcases lt_or_gt_of_ne hd with hneg | hpos
     · have ha : 0 < a := by

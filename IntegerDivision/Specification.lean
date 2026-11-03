@@ -1,4 +1,8 @@
-import IntegerDivision.Semantics
+module
+
+public import IntegerDivision.Semantics
+
+@[expose] public section
 
 set_option autoImplicit false
 
