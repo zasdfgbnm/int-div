@@ -1,0 +1,84 @@
+name: Lean CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lean:
+    name: Build, lint, and external consumer
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build and lint the pinned Lean package
+        uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6 # v1.6.2
+        with:
+          auto-config: false
+          build: true
+          build-args: "--wfail"
+          test: false
+          lint: true
+          use-mathlib-cache: true
+          use-github-cache: true
+
+      - name: Build an external consumer
+        shell: bash
+        run: |
+          set -euo pipefail
+          consumer=$(mktemp -d)
+          trap 'rm -rf "$consumer"' EXIT
+          cp lean-toolchain "$consumer/lean-toolchain"
+
+          cat > "$consumer/lakefile.toml" <<EOF
+          name = "integer-division-consumer"
+          version = "0.0.0"
+          defaultTargets = ["Consumer"]
+
+          [[lean_lib]]
+          name = "Consumer"
+
+          [[require]]
+          name = "integer-division"
+          path = "$GITHUB_WORKSPACE"
+          EOF
+
+          cat > "$consumer/Consumer.lean" <<'EOF'
+          import IntegerDivision
+
+          #check @IntegerDivision.Profile
+          #check @IntegerDivision.quotient_remainder_profiles
+          #check @IntegerDivision.zero_quotient_characterization
+          #check @IntegerDivision.negating_operands
+          #check @IntegerDivision.eliminating_quotient_from_strict_inequality
+          EOF
+
+          (
+            cd "$consumer"
+            MATHLIB_NO_CACHE_ON_UPDATE=1 lake update
+          )
+
+          mv "$consumer/.lake/packages" "$consumer/resolved-packages"
+          ln -s "$GITHUB_WORKSPACE/.lake/packages" "$consumer/.lake/packages"
+
+          (
+            cd "$consumer"
+            lake build --wfail
+          )
+
+      - name: Check dependency pins
+        run: git diff --exit-code -- lean-toolchain lakefile.toml lake-manifest.json

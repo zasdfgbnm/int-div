@@ -1,0 +1,19 @@
+name = "integer-division"
+version = "0.1.0"
+defaultTargets = ["IntegerDivision"]
+lintDriver = "batteries/runLinter"
+lintDriverArgs = ["IntegerDivision"]
+builtinLint = true
+
+[leanOptions]
+weak.linter.mathlibStandardSet = true
+weak.linter.extra = true
+weak.linter.style.header = false
+
+[[lean_lib]]
+name = "IntegerDivision"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "0df444a360eaa60ab8c11dca51a86af692955474"
