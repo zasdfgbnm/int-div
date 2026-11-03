@@ -26,7 +26,7 @@ jobs:
           persist-credentials: false
 
       - name: Build, lint, and audit the pinned Lean package
-        uses: leanprover/lean-action@v1.6.2
+        uses: leanprover/lean-action@v1.7.0
         with:
           auto-config: false
           build: true
